@@ -1,18 +1,6 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from collections import Counter
-
-
-
-def euclidean_distance(a, b):
-    return np.sqrt(np.sum((b - a) ** 2))
-
-def manhattan_distance(a, b):
-    return np.sum(np.abs(b - a))
-
-def minkowski_distance(a, b, p):
-    return np.sum(((b - a) ** p) ** (1 / p))
-
+from distances import euclidean_distance
 
 class KNN:
     def __init__(self, k):
