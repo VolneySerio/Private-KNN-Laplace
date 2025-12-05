@@ -1,9 +1,11 @@
 import numpy as np
-from distances import euclidean_distance
+from .distances import euclidean_distance
+from tqdm import tqdm
 
 class RN:
-    def __init__(self, epsilon=1.0):
+    def __init__(self, epsilon=1.0, verbose=False):
         self.epsilon =  epsilon
+        self.verbose = verbose
 
     def fit(self, X, y):
         self.X_train = np.array(X)
@@ -11,8 +13,19 @@ class RN:
         self.classes_ = np.unique(y)
         self.n_classe = len(self.classes_)
         
-    def predict(self, new_point, r ):
-        distances = [euclidean_distance(point, new_point) for point in self.X_train]
+    def predict(self, new_points, r):
+        if self.verbose:
+            predictions = []
+            for new_point in tqdm(new_points, desc="RN Predict", 
+                                 unit="sample", leave=True):
+                predictions.append(self.predict_class(new_point, r))
+        else:
+            predictions = [self.predict_class(new_point, r) for new_point in new_points]
+        
+        return predictions
+    
+    def predict_class(self, new_point, r):
+        distances = np.array([euclidean_distance(point, new_point) for point in self.X_train])
 
         noisy_counts = {}
         for cls in self.classes_:  
